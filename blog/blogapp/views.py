@@ -7,7 +7,7 @@ from .forms import BlogPost
 def home(request):
     blogs = Blog.objects
     blog_list=Blog.objects.all()
-    paginator = Paginator(blog_list,3)
+    paginator = Paginator(blog_list,5)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
     return render(request,'home.html',{'blogs':blogs,'posts':posts})
@@ -33,6 +33,7 @@ def blogpost(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.pub_date=timezone.now()
+            post.author = request.user
             post.save()
             return redirect('/')
     else:
